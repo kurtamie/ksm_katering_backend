@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_details",
+  "info": {
+    "singularName": "order-detail",
+    "pluralName": "order-details",
+    "displayName": "Order_detail"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order_id": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order.order",
+      "inversedBy": "order_details"
+    },
+    "qty": {
+      "type": "string"
+    },
+    "selling_price": {
+      "type": "string"
+    },
+    "broker_fee": {
+      "type": "string"
+    },
+    "price_for_ksm": {
+      "type": "string"
+    },
+    "min_selling_price": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "string"
+    },
+    "delivery_charge": {
+      "type": "string"
+    },
+    "total_amount": {
+      "type": "string"
+    }
+  }
+}

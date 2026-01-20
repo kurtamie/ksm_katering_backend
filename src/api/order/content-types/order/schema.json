@@ -1,0 +1,105 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order_no": {
+      "type": "uid"
+    },
+    "customer_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::customer.customer",
+      "inversedBy": "orders"
+    },
+    "staff_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::staff.staff",
+      "inversedBy": "orders"
+    },
+    "customer_type": {
+      "type": "string"
+    },
+    "executor_name": {
+      "type": "string"
+    },
+    "supplier": {
+      "type": "string"
+    },
+    "product": {
+      "type": "string"
+    },
+    "package_id": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::package.package",
+      "inversedBy": "orders"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "recipient_phone_no": {
+      "type": "string"
+    },
+    "order_details": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order-detail.order-detail",
+      "mappedBy": "order_id"
+    },
+    "delivery_note": {
+      "type": "text"
+    },
+    "order_menus": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order-menu.order-menu",
+      "mappedBy": "order_id"
+    },
+    "delivery_date": {
+      "type": "datetime"
+    },
+    "arrive_time": {
+      "type": "string"
+    },
+    "leave": {
+      "type": "string"
+    },
+    "delivery_address": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "string"
+    },
+    "longitude": {
+      "type": "string"
+    },
+    "step": {
+      "type": "string"
+    },
+    "travel_letter_no": {
+      "type": "string"
+    },
+    "created_date": {
+      "type": "date"
+    },
+    "driver": {
+      "type": "string"
+    },
+    "staff_driver_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::staff.staff",
+      "inversedBy": "orders_driver"
+    }
+  }
+}

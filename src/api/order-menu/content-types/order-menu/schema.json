@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_menus",
+  "info": {
+    "singularName": "order-menu",
+    "pluralName": "order-menus",
+    "displayName": "Order_menu"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order_id": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order.order",
+      "inversedBy": "order_menus"
+    },
+    "rice": {
+      "type": "string"
+    },
+    "main_dish": {
+      "type": "string"
+    },
+    "additional_dish": {
+      "type": "string"
+    },
+    "vegetable": {
+      "type": "string"
+    },
+    "sauce": {
+      "type": "string"
+    },
+    "chip": {
+      "type": "string"
+    },
+    "fruit": {
+      "type": "string"
+    },
+    "mineral_water": {
+      "type": "string"
+    },
+    "box": {
+      "type": "string"
+    },
+    "pudding": {
+      "type": "string"
+    },
+    "snack": {
+      "type": "string"
+    }
+  }
+}
