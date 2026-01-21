@@ -471,6 +471,40 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiInvoiceInvoice extends Struct.CollectionTypeSchema {
+  collectionName: 'invoices';
+  info: {
+    displayName: 'invoice';
+    pluralName: 'invoices';
+    singularName: 'invoice';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    invoice_date: Schema.Attribute.DateTime;
+    invoice_no: Schema.Attribute.UID;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::invoice.invoice'
+    > &
+      Schema.Attribute.Private;
+    orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
+    payment_status: Schema.Attribute.Enumeration<
+      ['unpaid', 'paid', 'overdue']
+    > &
+      Schema.Attribute.DefaultTo<'unpaid'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOrderDetailOrderDetail extends Struct.CollectionTypeSchema {
   collectionName: 'order_details';
   info: {
@@ -572,6 +606,11 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     delivery_note: Schema.Attribute.Text;
     driver: Schema.Attribute.String;
     executor_name: Schema.Attribute.String;
+    image_receive: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    invoices: Schema.Attribute.Relation<'manyToMany', 'api::invoice.invoice'>;
     latitude: Schema.Attribute.String;
     leave: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1190,6 +1229,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::invoice.invoice': ApiInvoiceInvoice;
       'api::order-detail.order-detail': ApiOrderDetailOrderDetail;
       'api::order-menu.order-menu': ApiOrderMenuOrderMenu;
       'api::order.order': ApiOrderOrder;

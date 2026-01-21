@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "invoices",
+  "info": {
+    "singularName": "invoice",
+    "pluralName": "invoices",
+    "displayName": "invoice"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "invoice_no": {
+      "type": "uid"
+    },
+    "invoice_date": {
+      "type": "datetime"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order.order",
+      "inversedBy": "invoices"
+    },
+    "payment_status": {
+      "type": "enumeration",
+      "default": "unpaid",
+      "enum": [
+        "unpaid",
+        "paid",
+        "overdue"
+      ]
+    }
+  }
+}
