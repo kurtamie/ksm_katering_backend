@@ -17,8 +17,11 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "customer"
     },
-    "sales_name": {
-      "type": "string"
+    "staff_id": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::staff.staff",
+      "inversedBy": "customers"
     },
     "gender": {
       "type": "string"

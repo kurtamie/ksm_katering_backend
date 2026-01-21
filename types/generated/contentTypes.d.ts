@@ -460,7 +460,7 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
     orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     phone_no: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    sales_name: Schema.Attribute.String;
+    staff_id: Schema.Attribute.Relation<'manyToMany', 'api::staff.staff'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -690,6 +690,10 @@ export interface ApiStaffStaff extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    customers: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::customer.customer'
+    >;
     department: Schema.Attribute.String;
     ktp_no: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

@@ -49,6 +49,12 @@
       "relation": "oneToMany",
       "target": "api::order.order",
       "mappedBy": "staff_driver_id"
+    },
+    "customers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::customer.customer",
+      "mappedBy": "staff_id"
     }
   }
 }
