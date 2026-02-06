@@ -633,7 +633,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     recipient_phone_no: Schema.Attribute.String;
     staff_driver_id: Schema.Attribute.Relation<'manyToOne', 'api::staff.staff'>;
     staff_id: Schema.Attribute.Relation<'manyToOne', 'api::staff.staff'>;
-    step: Schema.Attribute.String;
+    step: Schema.Attribute.String & Schema.Attribute.DefaultTo<'packing'>;
     supplier: Schema.Attribute.String;
     travel_letter_no: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;

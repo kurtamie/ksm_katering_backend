@@ -84,7 +84,8 @@
       "type": "string"
     },
     "step": {
-      "type": "string"
+      "type": "string",
+      "default": "packing"
     },
     "travel_letter_no": {
       "type": "string"
