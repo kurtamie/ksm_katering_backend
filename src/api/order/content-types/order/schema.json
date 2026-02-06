@@ -87,9 +87,6 @@
       "type": "string",
       "default": "packing"
     },
-    "travel_letter_no": {
-      "type": "string"
-    },
     "created_date": {
       "type": "date"
     },
@@ -117,6 +114,9 @@
       "relation": "manyToMany",
       "target": "api::invoice.invoice",
       "mappedBy": "orders"
+    },
+    "travel_letter_no": {
+      "type": "uid"
     }
   }
 }

@@ -635,7 +635,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     staff_id: Schema.Attribute.Relation<'manyToOne', 'api::staff.staff'>;
     step: Schema.Attribute.String & Schema.Attribute.DefaultTo<'packing'>;
     supplier: Schema.Attribute.String;
-    travel_letter_no: Schema.Attribute.String;
+    travel_letter_no: Schema.Attribute.UID;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
