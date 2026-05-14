@@ -22,6 +22,7 @@ export default (plugin: any) => {
     ...originalController({ strapi }),
 
     async sendOtp(ctx: any) {
+      console.log('hhahahahshdha')
       const { phone_no } = ctx.request.body;
 
       if (!phone_no) {
