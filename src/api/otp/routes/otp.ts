@@ -12,5 +12,11 @@ export default {
         handler: "otp.verifyOtp",
         config: { auth: false },
       },
+      {
+        method: "POST",
+        path: "/auth/register",
+        handler: "otp.register",
+        config: { auth: false },
+      },
     ],
   };

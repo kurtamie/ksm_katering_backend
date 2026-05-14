@@ -684,6 +684,30 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiOtpOtp extends Struct.CollectionTypeSchema {
+  collectionName: 'otps';
+  info: {
+    displayName: 'OTP';
+    pluralName: 'otps';
+    singularName: 'otp';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::otp.otp'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPackagePackage extends Struct.CollectionTypeSchema {
   collectionName: 'packages';
   info: {
@@ -1316,6 +1340,7 @@ declare module '@strapi/strapi' {
       'api::order-detail.order-detail': ApiOrderDetailOrderDetail;
       'api::order-menu.order-menu': ApiOrderMenuOrderMenu;
       'api::order.order': ApiOrderOrder;
+      'api::otp.otp': ApiOtpOtp;
       'api::package.package': ApiPackagePackage;
       'api::staff.staff': ApiStaffStaff;
       'api::user-session.user-session': ApiUserSessionUserSession;

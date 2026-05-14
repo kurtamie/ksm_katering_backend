@@ -57,4 +57,58 @@ export default {
     otpStore.delete(phone_no);
     return ctx.send({ message: "OTP valid", verified: true });
   },
+
+  async register(ctx: any) {
+    const { phone_no, username, password } = ctx.request.body;
+
+    if (!phone_no || !username || !password) {
+      return ctx.badRequest("phone_no, username, dan password wajib diisi");
+    }
+
+    // Cek apakah nomor sudah terdaftar
+    const existing = await strapi.db.query("plugin::users-permissions.user").findOne({
+      where: { phone_no },
+    });
+    if (existing) {
+      return ctx.badRequest("Nomor sudah terdaftar");
+    }
+
+    // Hash password
+    const bcrypt = require("bcryptjs");
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Ambil role "authenticated" (default)
+    const defaultRole = await strapi.db.query("plugin::users-permissions.role").findOne({
+      where: { type: "authenticated" },
+    });
+
+    // Buat user baru
+    const user = await strapi.db.query("plugin::users-permissions.user").create({
+      data: {
+        username,
+        email: `${phone_no}@ksm.placeholder`,
+        phone_no,
+        password: hashedPassword,
+        confirmed: true,
+        blocked: false,
+        role: defaultRole?.id,
+      },
+    });
+
+    // Generate JWT
+    const token = strapi.plugins["users-permissions"].services.jwt.issue({ id: user.id });
+
+    return ctx.send({
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        phone_no: user.phone_no,
+        confirmed: user.confirmed,
+        blocked: user.blocked,
+        user_role: user.user_role ?? "customer",
+      },
+    });
+  },
 };
