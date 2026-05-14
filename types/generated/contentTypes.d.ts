@@ -468,6 +468,10 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    user_sessions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-session.user-session'
+    >;
   };
 }
 
@@ -753,6 +757,40 @@ export interface ApiStaffStaff extends Struct.CollectionTypeSchema {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiUserSessionUserSession extends Struct.CollectionTypeSchema {
+  collectionName: 'user_sessions';
+  info: {
+    displayName: 'User_session';
+    pluralName: 'user-sessions';
+    singularName: 'user-session';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currentMenu: Schema.Attribute.String;
+    customer: Schema.Attribute.Relation<'manyToOne', 'api::customer.customer'>;
+    lastInteraction: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-session.user-session'
+    > &
+      Schema.Attribute.Private;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    sessionData: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1231,6 +1269,8 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    otp_code: Schema.Attribute.String;
+    otp_expired_at: Schema.Attribute.DateTime;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1278,6 +1318,7 @@ declare module '@strapi/strapi' {
       'api::order.order': ApiOrderOrder;
       'api::package.package': ApiPackagePackage;
       'api::staff.staff': ApiStaffStaff;
+      'api::user-session.user-session': ApiUserSessionUserSession;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

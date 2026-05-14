@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_sessions",
+  "info": {
+    "singularName": "user-session",
+    "pluralName": "user-sessions",
+    "displayName": "User_session"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "phone": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "currentMenu": {
+      "type": "string"
+    },
+    "sessionData": {
+      "type": "json"
+    },
+    "lastInteraction": {
+      "type": "datetime"
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::customer.customer",
+      "inversedBy": "user_sessions"
+    }
+  }
+}
