@@ -65,7 +65,6 @@ export default {
       return ctx.badRequest("phone_no, username, dan password wajib diisi");
     }
 
-    // Cek apakah nomor sudah terdaftar
     const existing = await strapi.db.query("plugin::users-permissions.user").findOne({
       where: { phone_no },
     });
@@ -73,16 +72,13 @@ export default {
       return ctx.badRequest("Nomor sudah terdaftar");
     }
 
-    // Hash password
     const bcrypt = require("bcryptjs");
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Ambil role "authenticated" (default)
     const defaultRole = await strapi.db.query("plugin::users-permissions.role").findOne({
       where: { type: "authenticated" },
     });
 
-    // Buat user baru
     const user = await strapi.db.query("plugin::users-permissions.user").create({
       data: {
         username,
@@ -95,11 +91,58 @@ export default {
       },
     });
 
-    // Generate JWT
-    const token = strapi.plugins["users-permissions"].services.jwt.issue({ id: user.id });
+    // Seragam pakai "jwt" supaya konsisten dengan login
+    const jwt = strapi.plugins["users-permissions"].services.jwt.issue({ id: user.id });
 
     return ctx.send({
-      token,
+      jwt,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        phone_no: user.phone_no,
+        confirmed: user.confirmed,
+        blocked: user.blocked,
+        user_role: user.user_role ?? "customer",
+      },
+    });
+  },
+
+  // ─── LOGIN ────────────────────────────────────────────────────────────────
+  async login(ctx: any) {
+    console.log("login hit!");
+    const { phone_no, password } = ctx.request.body;
+
+    if (!phone_no || !password) {
+      return ctx.badRequest("phone_no dan password wajib diisi");
+    }
+
+    // Cari user berdasarkan phone_no
+    const user = await strapi.db.query("plugin::users-permissions.user").findOne({
+      where: { phone_no },
+    });
+
+    if (!user) {
+      return ctx.badRequest("Nomor tidak terdaftar");
+    }
+
+    if (user.blocked) {
+      return ctx.badRequest("Akun diblokir, hubungi admin");
+    }
+
+    // Verifikasi password
+    const bcrypt = require("bcryptjs");
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      return ctx.badRequest("Password salah");
+    }
+
+    // Generate JWT
+    const jwt = strapi.plugins["users-permissions"].services.jwt.issue({ id: user.id });
+
+    return ctx.send({
+      jwt,
       user: {
         id: user.id,
         username: user.username,

@@ -18,5 +18,11 @@ export default {
         handler: "otp.register",
         config: { auth: false },
       },
+      {
+        method: "POST",
+        path: "/auth/login",
+        handler: "otp.login",
+        config: { auth: false },
+      },
     ],
   };
