@@ -40,6 +40,15 @@
     },
     "total_amount": {
       "type": "string"
+    },
+    "payment1": {
+      "type": "string"
+    },
+    "payment2": {
+      "type": "string"
+    },
+    "payment3": {
+      "type": "string"
     }
   }
 }
