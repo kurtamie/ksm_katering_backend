@@ -52,6 +52,12 @@
     },
     "longitude": {
       "type": "string"
+    },
+    "user_sessions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-session.user-session",
+      "mappedBy": "customer"
     }
   }
 }
