@@ -23,6 +23,12 @@
     "main_dish": {
       "type": "string"
     },
+    "main_dish2": {
+      "type": "string"
+    },
+    "main_dish3": {
+      "type": "string"
+    },
     "additional_dish": {
       "type": "string"
     },

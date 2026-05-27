@@ -572,6 +572,9 @@ export interface ApiOrderDetailOrderDetail extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     min_selling_price: Schema.Attribute.String;
     order_id: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
+    payment1: Schema.Attribute.String;
+    payment2: Schema.Attribute.String;
+    payment3: Schema.Attribute.String;
     price_for_ksm: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     qty: Schema.Attribute.String;
@@ -608,6 +611,8 @@ export interface ApiOrderMenuOrderMenu extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     main_dish: Schema.Attribute.String;
+    main_dish2: Schema.Attribute.String;
+    main_dish3: Schema.Attribute.String;
     mineral_water: Schema.Attribute.String;
     order_id: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
     publishedAt: Schema.Attribute.DateTime;
@@ -669,6 +674,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     >;
     order_no: Schema.Attribute.UID;
     package_id: Schema.Attribute.Relation<'manyToMany', 'api::package.package'>;
+    package_name: Schema.Attribute.String;
     product: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     recipient_name: Schema.Attribute.String;
