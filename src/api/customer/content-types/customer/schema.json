@@ -53,6 +53,9 @@
     "longitude": {
       "type": "string"
     },
+    "subdistrict": {
+      "type": "string"
+    },
     "user_sessions": {
       "type": "relation",
       "relation": "oneToMany",
