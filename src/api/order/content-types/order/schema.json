@@ -44,6 +44,9 @@
       "target": "api::package.package",
       "inversedBy": "orders"
     },
+    "package_name": {
+      "type": "string"
+    },
     "recipient_name": {
       "type": "string"
     },
