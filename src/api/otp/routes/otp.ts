@@ -24,5 +24,11 @@ export default {
         handler: "otp.login",
         config: { auth: false },
       },
+      {
+        method: "POST",
+        path: "/auth/reset-password-phone",
+        handler: "otp.resetPasswordPhone",
+        config: { auth: false },
+      },
     ],
   };

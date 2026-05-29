@@ -1,17 +1,31 @@
+import { findUserByPhoneNo, normalizePhoneNo } from "../../../utils/phone-auth";
+
 const otpStore = new Map<string, { code: string; expiredAt: number }>();
 
 export default {
   async sendOtp(ctx: any) {
     console.log("sendOtp hit!");
     const { phone_no } = ctx.request.body;
+    const normalizedPhoneNo = normalizePhoneNo(phone_no);
 
-    if (!phone_no) {
+    if (!normalizedPhoneNo) {
       return ctx.badRequest("phone_no wajib diisi");
     }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiredAt = Date.now() + 5 * 60 * 1000;
-    otpStore.set(phone_no, { code, expiredAt });
+    otpStore.set(normalizedPhoneNo, { code, expiredAt });
+
+    const user = await findUserByPhoneNo(strapi, normalizedPhoneNo);
+    if (user) {
+      await strapi.db.query("plugin::users-permissions.user").update({
+        where: { id: user.id },
+        data: {
+          otp_code: code,
+          otp_expired_at: new Date(expiredAt),
+        },
+      });
+    }
 
     const fonnteRes = await fetch("https://api.fonnte.com/send", {
       method: "POST",
@@ -20,7 +34,7 @@ export default {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        target: phone_no,
+        target: normalizedPhoneNo,
         message: `Kode OTP Anda adalah *${code}*. Berlaku 5 menit. Jangan berikan kode ini kepada siapapun.`,
       }),
     });
@@ -36,38 +50,111 @@ export default {
   async verifyOtp(ctx: any) {
     console.log("verifyOtp hit!");
     const { phone_no, otp_code } = ctx.request.body;
+    const normalizedPhoneNo = normalizePhoneNo(phone_no);
 
-    if (!phone_no || !otp_code) {
+    if (!normalizedPhoneNo || !otp_code) {
       return ctx.badRequest("phone_no dan otp_code wajib diisi");
     }
 
-    const stored = otpStore.get(phone_no);
+    const stored = otpStore.get(normalizedPhoneNo);
+    const user = await findUserByPhoneNo(strapi, normalizedPhoneNo);
+    const storedCode = stored?.code ?? user?.otp_code;
+    const storedExpiredAt = stored?.expiredAt ?? (user?.otp_expired_at ? new Date(user.otp_expired_at).getTime() : null);
 
-    if (!stored) {
+    if (!storedCode || !storedExpiredAt) {
       return ctx.badRequest("OTP tidak ditemukan, kirim ulang kode");
     }
-    if (Date.now() > stored.expiredAt) {
-      otpStore.delete(phone_no);
+    if (Date.now() > storedExpiredAt) {
+      otpStore.delete(normalizedPhoneNo);
       return ctx.badRequest("Kode OTP sudah kadaluarsa");
     }
-    if (stored.code !== otp_code) {
+    if (storedCode !== otp_code) {
       return ctx.badRequest("Kode OTP tidak valid");
     }
 
-    otpStore.delete(phone_no);
+    otpStore.delete(normalizedPhoneNo);
+    if (user) {
+      await strapi.db.query("plugin::users-permissions.user").update({
+        where: { id: user.id },
+        data: {
+          otp_code: null,
+          otp_expired_at: null,
+        },
+      });
+    }
+
     return ctx.send({ message: "OTP valid", verified: true });
+  },
+
+  async resetPasswordPhone(ctx: any) {
+    const { phone_no, otp_code, password, password_confirmation, passwordConfirmation } = ctx.request.body;
+    const normalizedPhoneNo = normalizePhoneNo(phone_no);
+    const confirmation = password_confirmation ?? passwordConfirmation;
+
+    if (!normalizedPhoneNo || !otp_code || !password) {
+      return ctx.badRequest("phone_no, otp_code, dan password wajib diisi");
+    }
+
+    if (password.length < 6) {
+      return ctx.badRequest("Password minimal 6 karakter");
+    }
+
+    if (confirmation !== undefined && password !== confirmation) {
+      return ctx.badRequest("Konfirmasi password tidak sama");
+    }
+
+    const user = await findUserByPhoneNo(strapi, normalizedPhoneNo);
+    if (!user) {
+      return ctx.badRequest("Nomor tidak terdaftar");
+    }
+
+    if (user.blocked) {
+      return ctx.badRequest("Akun diblokir, hubungi admin");
+    }
+
+    const stored = otpStore.get(normalizedPhoneNo);
+    const storedCode = stored?.code ?? user.otp_code;
+    const storedExpiredAt = stored?.expiredAt ?? (user.otp_expired_at ? new Date(user.otp_expired_at).getTime() : null);
+
+    if (!storedCode || !storedExpiredAt) {
+      return ctx.badRequest("OTP tidak ditemukan, kirim ulang kode");
+    }
+
+    if (Date.now() > storedExpiredAt) {
+      otpStore.delete(normalizedPhoneNo);
+      await strapi.db.query("plugin::users-permissions.user").update({
+        where: { id: user.id },
+        data: {
+          otp_code: null,
+          otp_expired_at: null,
+        },
+      });
+      return ctx.badRequest("Kode OTP sudah kadaluarsa");
+    }
+
+    if (storedCode !== otp_code) {
+      return ctx.badRequest("Kode OTP tidak valid");
+    }
+
+    await strapi.plugins["users-permissions"].services.user.edit(user.id, {
+      password,
+      otp_code: null,
+      otp_expired_at: null,
+    });
+    otpStore.delete(normalizedPhoneNo);
+
+    return ctx.send({ message: "Password berhasil direset" });
   },
 
   async register(ctx: any) {
     const { phone_no, username, password } = ctx.request.body;
+    const normalizedPhoneNo = normalizePhoneNo(phone_no);
 
-    if (!phone_no || !username || !password) {
+    if (!normalizedPhoneNo || !username || !password) {
       return ctx.badRequest("phone_no, username, dan password wajib diisi");
     }
 
-    const existing = await strapi.db.query("plugin::users-permissions.user").findOne({
-      where: { phone_no },
-    });
+    const existing = await findUserByPhoneNo(strapi, normalizedPhoneNo);
     if (existing) {
       return ctx.badRequest("Nomor sudah terdaftar");
     }
@@ -82,8 +169,8 @@ export default {
     const user = await strapi.db.query("plugin::users-permissions.user").create({
       data: {
         username,
-        email: `${phone_no}@ksm.placeholder`,
-        phone_no,
+        email: `${normalizedPhoneNo}@ksm.placeholder`,
+        phone_no: normalizedPhoneNo,
         password: hashedPassword,
         confirmed: true,
         blocked: false,
@@ -112,15 +199,14 @@ export default {
   async login(ctx: any) {
     console.log("login hit!");
     const { phone_no, password } = ctx.request.body;
+    const normalizedPhoneNo = normalizePhoneNo(phone_no);
 
-    if (!phone_no || !password) {
+    if (!normalizedPhoneNo || !password) {
       return ctx.badRequest("phone_no dan password wajib diisi");
     }
 
     // Cari user berdasarkan phone_no
-    const user = await strapi.db.query("plugin::users-permissions.user").findOne({
-      where: { phone_no },
-    });
+    const user = await findUserByPhoneNo(strapi, normalizedPhoneNo);
 
     if (!user) {
       return ctx.badRequest("Nomor tidak terdaftar");
