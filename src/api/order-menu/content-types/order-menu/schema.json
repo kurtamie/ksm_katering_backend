@@ -55,6 +55,15 @@
     },
     "snack": {
       "type": "string"
+    },
+    "snack2": {
+      "type": "string"
+    },
+    "snack3": {
+      "type": "string"
+    },
+    "snack4": {
+      "type": "string"
     }
   }
 }

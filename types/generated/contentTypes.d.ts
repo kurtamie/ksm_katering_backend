@@ -461,6 +461,7 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
     phone_no: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     staff_id: Schema.Attribute.Relation<'manyToMany', 'api::staff.staff'>;
+    subdistrict: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
