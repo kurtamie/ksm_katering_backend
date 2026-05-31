@@ -25,7 +25,18 @@
         "chip",
         "fruit",
         "mineral_water",
-        "box"
+        "box",
+        "snack"
+      ]
+    },
+    "service": {
+      "type": "enumeration",
+      "enum": [
+        "ricebox",
+        "prasmanan",
+        "prasmanan_wedding",
+        "bento",
+        "snackbox"
       ]
     }
   }

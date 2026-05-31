@@ -495,6 +495,9 @@ export interface ApiDishDish extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    service: Schema.Attribute.Enumeration<
+      ['ricebox', 'prasmanan', 'prasmanan_wedding', 'bento', 'snackbox']
+    >;
     type: Schema.Attribute.Enumeration<
       [
         'rice',
@@ -506,6 +509,7 @@ export interface ApiDishDish extends Struct.CollectionTypeSchema {
         'fruit',
         'mineral_water',
         'box',
+        'snack',
       ]
     >;
     updatedAt: Schema.Attribute.DateTime;
@@ -621,6 +625,9 @@ export interface ApiOrderMenuOrderMenu extends Struct.CollectionTypeSchema {
     rice: Schema.Attribute.String;
     sauce: Schema.Attribute.String;
     snack: Schema.Attribute.String;
+    snack2: Schema.Attribute.String;
+    snack3: Schema.Attribute.String;
+    snack4: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
