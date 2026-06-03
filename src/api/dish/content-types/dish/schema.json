@@ -38,6 +38,19 @@
         "bento",
         "snackbox"
       ]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "ikan",
+        "ayam",
+        "seafood",
+        "daging",
+        "manis",
+        "asin",
+        "puding",
+        "roti"
+      ]
     }
   }
 }

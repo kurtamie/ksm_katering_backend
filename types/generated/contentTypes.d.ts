@@ -487,6 +487,9 @@ export interface ApiDishDish extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    category: Schema.Attribute.Enumeration<
+      ['ikan', 'ayam', 'seafood', 'daging', 'manis', 'asin', 'puding', 'roti']
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
