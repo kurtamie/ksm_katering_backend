@@ -31,6 +31,15 @@
         "paid",
         "overdue"
       ]
+    },
+    "midtrans_order_id": {
+      "type": "string"
+    },
+    "midtrans_snap_token": {
+      "type": "text"
+    },
+    "midtrans_redirect_url": {
+      "type": "text"
     }
   }
 }

@@ -544,6 +544,9 @@ export interface ApiInvoiceInvoice extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
+    midtrans_order_id: Schema.Attribute.String;
+    midtrans_snap_token: Schema.Attribute.Text;
+    midtrans_redirect_url: Schema.Attribute.Text;
     payment_status: Schema.Attribute.Enumeration<
       ['unpaid', 'paid', 'overdue']
     > &
