@@ -12,7 +12,8 @@
   "pluginOptions": {},
   "attributes": {
     "order_no": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "customer_id": {
       "type": "relation",

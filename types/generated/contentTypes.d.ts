@@ -543,10 +543,10 @@ export interface ApiInvoiceInvoice extends Struct.CollectionTypeSchema {
       'api::invoice.invoice'
     > &
       Schema.Attribute.Private;
-    orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
     midtrans_order_id: Schema.Attribute.String;
-    midtrans_snap_token: Schema.Attribute.Text;
     midtrans_redirect_url: Schema.Attribute.Text;
+    midtrans_snap_token: Schema.Attribute.Text;
+    orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
     payment_status: Schema.Attribute.Enumeration<
       ['unpaid', 'paid', 'overdue']
     > &
@@ -686,7 +686,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::order-menu.order-menu'
     >;
-    order_no: Schema.Attribute.UID;
+    order_no: Schema.Attribute.String & Schema.Attribute.Unique;
     package_id: Schema.Attribute.Relation<'manyToMany', 'api::package.package'>;
     package_name: Schema.Attribute.String;
     product: Schema.Attribute.String;
@@ -697,7 +697,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     staff_id: Schema.Attribute.Relation<'manyToOne', 'api::staff.staff'>;
     step: Schema.Attribute.String & Schema.Attribute.DefaultTo<'packing'>;
     supplier: Schema.Attribute.String;
-    travel_letter_no: Schema.Attribute.UID;
+    travel_letter_no: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
