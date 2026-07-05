@@ -30,5 +30,11 @@ export default {
         handler: "otp.resetPasswordPhone",
         config: { auth: false },
       },
+      {
+        method: "POST",
+        path: "/auth/verify-password-reset-otp",
+        handler: "otp.verifyPasswordResetOtp",
+        config: { auth: false },
+      },
     ],
   };
